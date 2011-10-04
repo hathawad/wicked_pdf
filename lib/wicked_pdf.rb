@@ -96,7 +96,7 @@ class WickedPdf
           r += make_options(opt_hf, [:font_size, :spacing], "#{hf.to_s}", :numeric)
           r += make_options(opt_hf, [:line], "#{hf.to_s}", :boolean)
           unless opt_hf[:html].blank?
-            r += make_option("#{hf.to_s}-html", opt_hf[:html][:url]) unless opt_hf[:html][:url].blank?
+            r += make_option("#{hf.to_s}-html", opt_hf[:html][:url],:numeric) unless opt_hf[:html][:url].blank?
           end
         end
       end unless options.blank?
