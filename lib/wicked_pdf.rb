@@ -25,14 +25,26 @@ class WickedPdf
   def pdf_from_string(string, options={})
     command = "#{@exe_path} #{parse_options(options)} -q - - " # -q for no errors on stdout
     p "*"*15 + command + "*"*15 unless defined?(Rails) and Rails.env != 'development'
-    pdf, err = Open3.popen3(command) do |stdin, stdout, stderr|
-      stdin.binmode
-      stdout.binmode
-      stderr.binmode
-      stdin.write(string)
-      stdin.close
-      [stdout.read, stderr.read]
-    end
+
+    stdin, stdout, stderr = Open3.popen3(command)
+    stdin.binmode
+    stdout.binmode
+    stderr.binmode
+    stdin.write(string)
+    stdin.close
+    pdf = stdout.read
+    err = stderr.read
+
+
+    # pdf, err = Open3.popen3(command) do |stdin, stdout, stderr|
+    #   stdin.binmode
+    #   stdout.binmode
+    #   stderr.binmode
+    #   stdin.write(string)
+    #   stdin.close
+    #   [stdout.read, stderr.read]
+    # end
+
     raise "PDF could not be generated!" if pdf and pdf.rstrip.length == 0
     pdf
   rescue Exception => e
@@ -65,9 +77,9 @@ class WickedPdf
 
     def make_option(name, value, type=:string)
       "--#{name.gsub('_', '-')} " + case type
-        when :boolean then ""
-        when :numeric then value.to_s
-        else "'#{value}'"
+      when :boolean then ""
+      when :numeric then value.to_s
+      else "'#{value}'"
       end + " "
     end
 
