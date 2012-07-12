@@ -35,7 +35,7 @@ module WickedPdfHelper
 
     def wicked_pdf_javascript_include_tag(*sources)
       sources.collect { |source|
-        "<script type='text/javascript'>#{read_asset(source+".js")}</script>"
+        "<script type='text/javascript'>#{read_asset(source)}</script>"
       }.join("\n").html_safe
     end
 
